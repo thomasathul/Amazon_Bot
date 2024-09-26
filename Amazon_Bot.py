@@ -1,48 +1,59 @@
-import requests
-from bs4 import BeautifulSoup
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
 import time
-import telegram
 import os
+import telegram
 
-# Your Telegram bot token and chat ID
-BOT_TOKEN = os.getenv('BOT_TOKEN')
-CHAT_ID = '7228218507'
+# Your Telegram bot token and chat ID (replace with your actual token and chat ID)
+BOT_TOKEN = os.getenv("BOT_TOKEN")  # Retrieve from environment variables
+CHAT_ID = os.getenv("CHAT_ID", "7228218507")  # Chat ID (can also be stored in GitHub secrets)
 
-# URL of the Amazon jobs page
+# URL of the Amazon Jobs page
 URL = "https://hiring.amazon.ca/locations/montreal-jobs#/"
 
-# Initialize the Telegram bot
+# Set up Telegram bot
 bot = telegram.Bot(token=BOT_TOKEN)
 
-# Function to send notification via Telegram
+# Function to send a notification to Telegram
 def send_notification(message):
     bot.send_message(chat_id=CHAT_ID, text=message)
 
-# Function to scrape the page and look for the keyword "job found"
-def scrape_jobs():
-    response = requests.get(URL)
-    
-    # Check if the keyword "job found" is present in the page content
-    if "Sorry, there are no jobs available that match your search." in response.text.lower():
-        return True
-    return False
+# Set up Selenium WebDriver (ensure ChromeDriver path is correct)
+chrome_options = webdriver.ChromeOptions()
+chrome_options.add_argument("--headless")
+chrome_options.add_argument("--no-sandbox")
+chrome_options.add_argument("--disable-dev-shm-usage")
 
+driver = webdriver.Chrome(options=chrome_options)
+
+# Function to check for jobs using Selenium
+def check_jobs():
+    try:
+        # Load the Amazon Jobs page
+        driver.get(URL)
+
+        # Wait for the page to load (adjust time as needed)
+        time.sleep(5)
+        print(driver.page_source)
+
+        # Check if the page contains a job-related keyword (e.g., "jobs found")
+        if "jobs found" in driver.page_source.lower():
+            print("Jobs are available!")
+            send_notification("New jobs found on the Amazon Montreal page!")
+        else:
+            print("No jobs found.")
+
+    except Exception as e:
+        send_notification(f"An error occurred while checking for jobs: {e}")
+
+# Main function to continuously check for jobs
 def main():
-    last_notified = False
+    check_jobs()  # Run the check once for GitHub Actions
 
-    while True:
-        jobs_found = scrape_jobs()
-
-        # Send notification if "job found" is detected and no previous notification was sent
-        if jobs_found and not last_notified:
-            send_notification("Keyword 'job found' detected on the Amazon Montreal jobs page!")
-            last_notified = True
-        elif not jobs_found and last_notified:
-            last_notified = False  # Reset the notification flag if the keyword is no longer found
-
-        # Check the webpage every 10 minutes (600 seconds)
-	
-        time.sleep(0.6)
-
+# Run the script
 if __name__ == "__main__":
     main()
+
+# Make sure to close the driver after you're done
+driver.quit()
