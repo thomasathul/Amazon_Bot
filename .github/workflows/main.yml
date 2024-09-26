@@ -1,11 +1,13 @@
-name: Run Bot
+
+name: Run Selenium Job Checker
 
 on:
   push:
     branches:
       - main
   schedule:
-    - cron: '*/1 * * * *'  # Example: Run every minute
+    - cron: '*/1 * * * *'  # Example: Run every minute    
+  workflow_dispatch:  # Allows manual run from the GitHub Actions UI
 
 
 concurrency:
@@ -13,9 +15,8 @@ concurrency:
   cancel-in-progress: true  # Cancel any previous runs that are still in progress
   
 jobs:
-  run-bot:
-    runs-on: ubuntu-latest
-
+  selenium-job-checker:
+    runs-on: ubuntu-latest  # Use the latest Ubuntu image
     steps:
     - name: Check out repository
       uses: actions/checkout@v2
@@ -26,9 +27,33 @@ jobs:
         python-version: '3.x'
 
     - name: Install dependencies
-      run: pip install -r requirements.txt
+      run: |
+        pip install selenium python-telegram-bot  # Install Selenium and Telegram bot libraries
 
-    - name: Run Python bot
+    - name: Install Chrome and ChromeDriver
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y google-chrome-stable
+        sudo apt-get install -y xvfb  # X virtual framebuffer for headless mode
+        CHROME_VERSION=$(google-chrome --version | grep -oP '\d{2,3}')
+        wget -N https://chromedriver.storage.googleapis.com/${CHROME_VERSION}.0.0/chromedriver_linux64.zip
+        unzip chromedriver_linux64.zip
+        sudo mv -f chromedriver /usr/local/bin/chromedriver
+        sudo chmod +x /usr/local/bin/chromedriver
+        chromedriver --version
+
+    - name: Run Selenium Job Checker
       env:
-        BOT_TOKEN: ${{ secrets.BOT_TOKEN }}  # Access the BOT_TOKEN secret here
-      run: python Amazon_Bot.py
+        BOT_TOKEN: ${{ secrets.BOT_TOKEN }}  # Get BOT_TOKEN from GitHub Secrets
+        CHAT_ID: '7228218507'
+      run: |
+        # Start virtual display for headless Chrome
+        Xvfb :99 -screen 0 1920x1080x16 &
+        export DISPLAY=:99
+
+        # Run your Python Selenium script
+        python Amazon_Bot.py
+
+      
+
+      
