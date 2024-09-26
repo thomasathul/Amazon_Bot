@@ -48,13 +48,10 @@ def check_jobs():
     except Exception as e:
         send_notification(f"An error occurred while checking for jobs: {e}")
 
-# Main function to continuously check for jobs
-def main():
-    check_jobs()  # Run the check once for GitHub Actions
-
-# Run the script
 if __name__ == "__main__":
-    main()
+    while True:
+        check_jobs()  # Run the check
+        time.sleep(0.6)  # Wait for 60 seconds before checking again
 
 # Make sure to close the driver after you're done
 driver.quit()
