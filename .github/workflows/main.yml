@@ -15,8 +15,9 @@ concurrency:
   cancel-in-progress: true  # Cancel any previous runs that are still in progress
   
 jobs:
-  selenium-job-checker:
+  selenium-test:
     runs-on: ubuntu-latest
+
     steps:
     - name: Check out repository
       uses: actions/checkout@v2
@@ -26,39 +27,21 @@ jobs:
       with:
         python-version: '3.x'
 
-    - name: Install dependencies
+    - name: Install Dependencies
       run: |
-        pip install selenium python-telegram-bot
+        # Install Selenium, Telegram Bot, and WebDriverManager
+        pip install selenium python-telegram-bot webdriver-manager
 
-    - name: Install Latest Stable Chrome
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y google-chrome-stable
-        google-chrome --version  # Verify the installed Chrome version
-
-    - name: Install Matching ChromeDriver
-      run: |
-        # Get the installed Chrome version
-        CHROME_VERSION=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+')
-        CHROME_MAJOR_VERSION=$(echo $CHROME_VERSION | cut -d '.' -f 1)
-        echo "Installed Chrome version: $CHROME_VERSION"
-
-    - name: Install ChromeDriver 129.0.6668.70
-      run: |
-        # Download and install ChromeDriver version 129.0.6668.70
-        wget -N https://chromedriver.storage.googleapis.com/129.0.6668.70/chromedriver_linux64.zip
-        unzip chromedriver_linux64.zip
-        sudo mv chromedriver /usr/local/bin/chromedriver
-        sudo chmod +x /usr/local/bin/chromedriver
-        chromedriver --version  # Verify the installed ChromeDriver version
-
-    - name: Run Selenium Job Checker
+    - name: Run Selenium Test with WebDriverManager
       env:
-        BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+        BOT_TOKEN: ${{ secrets.BOT_TOKEN }}  # Use GitHub secrets for secure tokens
         CHAT_ID: '7228218507'
       run: |
+        # Start Xvfb for headless Chrome execution
         Xvfb :99 -screen 0 1920x1080x16 &
         export DISPLAY=:99
+
+        # Run the Selenium script     
         python Amazon_Bot.py
 
       
