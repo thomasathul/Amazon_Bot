@@ -5,7 +5,7 @@ import telegram
 import time
 
 # Your Telegram bot token and chat ID
-BOT_TOKEN = '7883975614:AAFrD_y_q2mtch6wburl6NOCrWh2ehmtEsM'
+BOT_TOKEN = os.getenv('BOT_TOKEN')
 CHAT_ID = '7228218507'
 
 # URL of the Amazon jobs page
