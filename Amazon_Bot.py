@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import time
 import telegram
-import time
+import os
 
 # Your Telegram bot token and chat ID
 BOT_TOKEN = os.getenv('BOT_TOKEN')
