@@ -1,7 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.common.by import By
-import time
+from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager
 import os
 import telegram
 
@@ -19,13 +19,14 @@ bot = telegram.Bot(token=BOT_TOKEN)
 def send_notification(message):
     bot.send_message(chat_id=CHAT_ID, text=message)
 
-# Set up Selenium WebDriver (ensure ChromeDriver path is correct)
-chrome_options = webdriver.ChromeOptions()
+# Set up Chrome options for headless browsing
+chrome_options = Options()
 chrome_options.add_argument("--headless")
 chrome_options.add_argument("--no-sandbox")
 chrome_options.add_argument("--disable-dev-shm-usage")
 
-driver = webdriver.Chrome(options=chrome_options)
+# Use WebDriverManager to automatically download and configure the correct ChromeDriver
+driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
 
 # Function to check for jobs using Selenium
 def check_jobs():
@@ -35,7 +36,7 @@ def check_jobs():
 
         # Wait for the page to load (adjust time as needed)
         time.sleep(5)
-        print(driver.page_source)
+       
 
         # Check if the page contains a job-related keyword (e.g., "jobs found")
         if "jobs found" in driver.page_source.lower():
