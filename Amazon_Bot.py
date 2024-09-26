@@ -3,6 +3,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 import os
+import time
 import telegram
 
 # Your Telegram bot token and chat ID (replace with your actual token and chat ID)
