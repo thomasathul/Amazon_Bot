@@ -23,7 +23,7 @@ def scrape_jobs():
     response = requests.get(URL)
     
     # Check if the keyword "job found" is present in the page content
-    if "no jobs available" in response.text.lower():
+    if "Sorry, there are no jobs available that match your search." in response.text.lower():
         return True
     return False
 
