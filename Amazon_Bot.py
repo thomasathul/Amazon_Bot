@@ -17,8 +17,8 @@ URL = "https://hiring.amazon.ca/locations/montreal-jobs#/"
 bot = telegram.Bot(token=BOT_TOKEN)
 
 # Function to send a notification to Telegram
-def send_notification(message):
-    bot.send_message(chat_id=CHAT_ID, text=message)
+async def send_notification(message):
+    await bot.send_message(chat_id=CHAT_ID, text=message)
 
 # Set up Chrome options for headless browsing
 chrome_options = Options()
