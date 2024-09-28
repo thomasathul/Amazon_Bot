@@ -22,7 +22,7 @@ bot = telegram.Bot(token=BOT_TOKEN)
 async def send_notification(message):
     try:
         await bot.send_message(chat_id=CHAT_ID, text=message)
-     except TimedOut:
+    except TimedOut:
          await asyncio.sleep(5)
          await bot.send_message(chat_id=CHAT_ID, text=message)
 
