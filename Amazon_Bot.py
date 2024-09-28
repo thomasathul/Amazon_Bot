@@ -16,12 +16,15 @@ CHAT_ID = os.getenv("CHAT_ID", "7228218507")  # Chat ID (can also be stored in G
 URL = "https://hiring.amazon.ca/locations/montreal-jobs#/"
 
 # Set up Telegram bot
-request = HTTPXRequest(timeout=30)
-bot = telegram.Bot(token=BOT_TOKEN,request=request)
+bot = telegram.Bot(token=BOT_TOKEN)
 
 # Function to send a notification to Telegram
 async def send_notification(message):
-    await bot.send_message(chat_id=CHAT_ID, text=message)
+    try:
+        await bot.send_message(chat_id=CHAT_ID, text=message)
+     except TimedOut:
+         await asyncio.sleep(5)
+         await bot.send_message(chat_id=CHAT_ID, text=message)
 
 # Set up Chrome options for headless browsing
 chrome_options = Options()
