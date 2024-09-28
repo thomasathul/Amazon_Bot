@@ -16,7 +16,7 @@ CHAT_ID = os.getenv("CHAT_ID", "7228218507")  # Chat ID (can also be stored in G
 URL = "https://hiring.amazon.ca/locations/montreal-jobs#/"
 
 # Set up Telegram bot
-request = HTTPXRequest(pool_limits=10, timeout=60)
+request = HTTPXRequest(timeout=30)
 bot = telegram.Bot(token=BOT_TOKEN,request=request)
 
 # Function to send a notification to Telegram
