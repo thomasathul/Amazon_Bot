@@ -23,7 +23,7 @@ async def send_notification(message):
     try:
         await bot.send_message(chat_id=CHAT_ID, text=message)
     except TimedOut:
-         await asyncio.sleep(5)
+         await asyncio.sleep(60)
          await bot.send_message(chat_id=CHAT_ID, text=message)
 
 # Set up Chrome options for headless browsing
