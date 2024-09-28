@@ -5,6 +5,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 import os
 import time
 import telegram
+import asyncio
 
 # Your Telegram bot token and chat ID (replace with your actual token and chat ID)
 BOT_TOKEN = os.getenv("BOT_TOKEN")  # Retrieve from environment variables
@@ -42,12 +43,12 @@ def check_jobs():
         # Check if the page contains a job-related keyword (e.g., "jobs found")
         if "no jobs available" in driver.page_source.lower():
             print("Jobs are available!")
-            await send_notification("TEST-New jobs found on the Amazon Montreal page!")
+            asyncio.run(send_notification("TEST-New jobs found on the Amazon Montreal page!"))
         else:
             print("No jobs found.")
 
     except Exception as e:
-        await send_notification(f"An error occurred while checking for jobs: {e}")
+        asyncio.run(send_notification(f"An error occurred while checking for jobs: {e}"))
 
 if __name__ == "__main__":
     while True:
