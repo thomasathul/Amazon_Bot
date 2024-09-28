@@ -40,9 +40,9 @@ def check_jobs():
        
 
         # Check if the page contains a job-related keyword (e.g., "jobs found")
-        if "jobs found" in driver.page_source.lower():
+        if "no jobs available" in driver.page_source.lower():
             print("Jobs are available!")
-            send_notification("New jobs found on the Amazon Montreal page!")
+            send_notification("TEST-New jobs found on the Amazon Montreal page!")
         else:
             print("No jobs found.")
 
