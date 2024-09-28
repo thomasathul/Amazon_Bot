@@ -42,12 +42,12 @@ def check_jobs():
         # Check if the page contains a job-related keyword (e.g., "jobs found")
         if "no jobs available" in driver.page_source.lower():
             print("Jobs are available!")
-            send_notification("TEST-New jobs found on the Amazon Montreal page!")
+            await send_notification("TEST-New jobs found on the Amazon Montreal page!")
         else:
             print("No jobs found.")
 
     except Exception as e:
-        send_notification(f"An error occurred while checking for jobs: {e}")
+        await send_notification(f"An error occurred while checking for jobs: {e}")
 
 if __name__ == "__main__":
     while True:
