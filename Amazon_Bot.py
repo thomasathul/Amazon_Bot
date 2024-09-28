@@ -23,7 +23,7 @@ async def send_notification(message):
     try:
         await bot.send_message(chat_id=CHAT_ID, text=message)
     except TimedOut:
-         await asyncio.sleep(60)
+         await asyncio.sleep(10)
          await bot.send_message(chat_id=CHAT_ID, text=message)
 
 # Set up Chrome options for headless browsing
@@ -46,7 +46,7 @@ def check_jobs():
        
 
         # Check if the page contains a job-related keyword (e.g., "jobs found")
-        if "no jobs available" in driver.page_source.lower():
+        if "job found" in driver.page_source.lower():
             print("Jobs are available!")
             asyncio.run(send_notification("TEST-New jobs found on the Amazon Montreal page!"))
         else:
